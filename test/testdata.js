@@ -1,7 +1,8 @@
 'use strict';
 
 var config = require('../config');
-var async = require("async");
+var async = require('async');
+var _ = require('lodash');
 var randomMac = require('random-mac');
 var mongoose = require('mongoose');
 var mongoURI = config.mongodb.uri;
@@ -31,19 +32,20 @@ var Device = require('../models/device');
 var Customer = require('../models/customer');
 
 
+/** 1. Generate test data collections. */
 function generateProducts() {
 	var products = [];
-	var price = 50;
+	var increment = 50;
 	for (var i = 1; i <= config.testdata.products; i++) {
 		products.push(
 			new Product({
 				name: "Product " + i,
-				unitPrice: 100 + price,
+				price: 100 + increment,
 				totalQuantity: 100,
 				imagePath: "/i/product.png"
 			})
 		);
-		price += i % 5 == 0 ? 50: 0;
+		increment += i % 5 == 0 ? 50: 0;
 	}
 	return products;
 }
@@ -100,23 +102,61 @@ function generateCustomers() {
 	return customers;
 }
 
+function generateRandomProducts(products) {
+	var randomProducts = [];
+	var productCount = _.random(1, 3);
+	for (var i = 0; i < productCount; i++) {
+		var productIndex = _.random(0, products.length - 1);
+		randomProducts.push(products[productIndex]);
+	}
+	return randomProducts;
+}
+
+function generatedOrderItems(products) {
+	var orderItems = [];
+	var randomProducts = generateRandomProducts(products);
+	for (var i = 0; i < randomProducts.length; i++) {
+		config.id.itemNumber = config.id.itemNumber + 1;
+		orderItems.push(
+			new OrderItem({
+				itemNumber: config.id.itemNumber,
+				pricePaid: randomProducts[i].price,
+				quantityBought: _.random(1, 6),
+				product: randomProducts[i] /*._id*/
+			})
+		);
+	}
+	return orderItems;
+}
+
 function generateOrders(products, customers) {
 	var orders = [];
-	for (var i = 1; i <= config.testdata.customers; i++) {
+
+	var orderNumber = Number((new Date()).toISOString().replace(/[^0-9]/g, "").slice(0, 13));
+	for (var i = 0; i < customers.length; i++) {
+		var orderItems = generatedOrderItems(products);
+		// var orderItemIds = orderItems.map(function(orderItem, index) { return orderItem._id; });
+		var amountPaid = orderItems.reduce(function(sum, item) {return sum + item.pricePaid * item.quantityBought;}, 0);
 		orders.push(
 			new Order({
-
+				/*customer: customers[i]._id,*/
+				orderNumber: orderNumber + i + 1,
+				amountPaid: amountPaid,
+				items: orderItems,
+				storeLocation: "California"
 			})
 		);
 	}
 	return orders;
 }
 
+
+/** 2. Batch insert the collections into the MongoDB database. */
 function addProducts(callback) {
 	console.log("Adding products.");
 
 	var products = generateProducts();
-	console.log(JSON.stringify(products));
+	console.log(JSON.stringify(products, null, 2));
 
 	console.log("Added products.\n");
 	callback(null, products);
@@ -126,7 +166,7 @@ function addUsers(products, callback) {
 	console.log("Adding users.");
 
 	var users = generateUsers();
-	console.log(JSON.stringify(users));
+	console.log(JSON.stringify(users, null, 2));
 
 	console.log("Added users.\n");
 	callback(null, products, users);
@@ -136,28 +176,28 @@ function addDevices(products, users, callback) {
 	console.log("Adding devices.");
 
 	var devices = generateDevices(users);
-	console.log(JSON.stringify(devices));
+	console.log(JSON.stringify(devices, null, 2));
 
 	console.log("Added devices.\n");
-	callback(null, products, users, null);
+	callback(null, products, users, devices);
 }
 
 function addCustomers(products, users, devices, callback) {
 	console.log("Adding customers.");
 
 	var customers = generateCustomers();
-	console.log(JSON.stringify(customers));
+	console.log(JSON.stringify(customers, null, 2));
 
 	console.log("Added customers.\n");
-	callback(null, products, users, devices, null);
+	callback(null, products, users, devices, customers);
 }
 
 function addOrders(products, users, devices, customers, callback) {
 	console.log("Adding orders.");
 
 	var orders = generateOrders(products, customers);
-	console.log(JSON.stringify(orders));
+	console.log(JSON.stringify(orders, null, 2));
 
 	console.log("Added orders.\n");
-	callback(null, products, users, devices, customers, null);
+	callback(null, products, users, devices, customers, orders);
 }

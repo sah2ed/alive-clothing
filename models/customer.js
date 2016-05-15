@@ -8,6 +8,7 @@ var CustomerSchema   = new Schema({
     phone: { type: String, required: true, unique: true },
     country: { type: String, required: false },
 
+	purchaseNote: { type: String, required: false },
     isVIP: { type: Boolean, required: true },
     isInStore: { type: Boolean, required: false },
 

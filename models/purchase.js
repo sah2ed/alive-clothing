@@ -24,7 +24,14 @@ var ProductSchema   = new Schema({
     imagePath: { type: String, required: true },
     createdAt: { type: Date, required: false, default: Date.now }
 });
-
+/*
 module.exports = mongoose.model('Order', OrderSchema);
 module.exports = mongoose.model('OrderItem', OrderItemSchema);
 module.exports = mongoose.model('Product', ProductSchema);
+*/
+
+module.exports = {
+	Order: mongoose.model('Order', OrderSchema),
+	OrderItem: mongoose.model('OrderItem', OrderItemSchema),
+	Product: mongoose.model('Product', ProductSchema)
+};

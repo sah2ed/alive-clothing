@@ -22,7 +22,8 @@ function add(req, res) {
 	var newUser = new User({
 		username: username,
 		password: password,
-		name: {first: firstName, last: lastName },
+		firstName: firstName,
+		lastName: lastName,
 		email: email
 	});
 

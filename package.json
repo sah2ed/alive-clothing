@@ -8,9 +8,11 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "async": "^2.0.0-rc.4",
     "express": "^4.12.3",
     "mongoose": "^4.4.17",
     "node-uuid": "^1.4.7",
+    "random-mac": "0.0.4",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {

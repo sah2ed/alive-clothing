@@ -7,11 +7,11 @@ var randomMac = require('random-mac');
 var mongoose = require('mongoose');
 var mongoURI = config.mongodb.uri;
 
-mongoose.connect(mongoURI, function (err, res) {
+mongoose.connect(mongoURI, config.mongodb.options, function(err, result) {
     if (err) {
-        console.log ('ERROR connecting to: ' + mongoURI + '. ' + err);
+        console.log('ERROR connecting to: ' + mongoURI + '. ' + err);
     } else {
-        console.log ('Successfully connected to: ' + mongoURI);
+        console.log('Successfully connected to: ' + mongoURI);
 		async.waterfall([
 			addProducts,
 			addUsers,
@@ -20,6 +20,18 @@ mongoose.connect(mongoURI, function (err, res) {
 			addOrders
 		], function (err, products, users, devices, customers, orders) {
 			mongoose.disconnect(function() {console.log("Done.");});
+			/*
+			async.waterfall([
+				Product.insertMany(products, async.apply(onInsertComplete, 'Product')),
+				User.insertMany(users, async.apply(onInsertComplete, 'User')),
+				Device.insertMany(devices, async.apply(onInsertComplete, 'Device')),
+				Customer.insertMany(customers, async.apply(onInsertComplete, 'Customer')),
+				OrderItem.insertMany(orderItems, async.apply(onInsertComplete, 'OrderItem')),
+				Order.insertMany(orders, async.apply(onInsertComplete, 'Order'))
+			], function (err) {
+				mongoose.disconnect(function() {console.log("Done.");});
+			});
+			*/
 		});
     }
 });
@@ -122,7 +134,7 @@ function generatedOrderItems(products) {
 				itemNumber: config.id.itemNumber,
 				pricePaid: randomProducts[i].price,
 				quantityBought: _.random(1, 6),
-				product: randomProducts[i] /*._id*/
+				product: randomProducts[i]._id
 			})
 		);
 	}
@@ -132,18 +144,30 @@ function generatedOrderItems(products) {
 function generateOrders(products, customers) {
 	var orders = [];
 
+	// Temporary schema update to defer the persistence of OrderItems.
+	var OrderSchema = Order.schema;
+	OrderSchema.set('toJSON', { virtuals: true });
+	OrderSchema.set('toObject', { virtuals: true });
+	OrderSchema.virtual('orderItems').set(function(orderItems) {
+		this._orderItems = orderItems;
+	});
+	OrderSchema.virtual('orderItems').get(function() {
+  		return this._orderItems ;
+	});
+
 	var orderNumber = Number((new Date()).toISOString().replace(/[^0-9]/g, "").slice(0, 13));
 	for (var i = 0; i < customers.length; i++) {
 		var orderItems = generatedOrderItems(products);
-		// var orderItemIds = orderItems.map(function(orderItem, index) { return orderItem._id; });
+		var orderItemIds = orderItems.map(function(orderItem, index) { return orderItem._id; });
 		var amountPaid = orderItems.reduce(function(sum, item) {return sum + item.pricePaid * item.quantityBought;}, 0);
 		orders.push(
 			new Order({
-				/*customer: customers[i]._id,*/
+				customer: customers[i]._id,
 				orderNumber: orderNumber + i + 1,
 				amountPaid: amountPaid,
-				items: orderItems,
-				storeLocation: "California"
+				items: orderItemIds,
+				storeLocation: "California",
+				orderItems: orderItems
 			})
 		);
 	}
@@ -200,4 +224,13 @@ function addOrders(products, users, devices, customers, callback) {
 
 	console.log("Added orders.\n");
 	callback(null, products, users, devices, customers, orders);
+}
+
+function onInsertComplete(model, err, documents) {
+	if (err) {
+		console.log("Bulk insertion failed.");
+		console.error(err);
+	} else {
+		console.info('%d %s documents were inserted successfully. ', documents.length, model);
+    }
 }

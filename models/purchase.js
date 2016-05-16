@@ -1,18 +1,18 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
-//var Customer = require('./customer');
+var Customer = require('./customer');
 
 var OrderSchema   = new Schema({
     orderNumber: { type: Number, required: true, unique: true },
     amountPaid: { type: Number, required: true, min: 0 },
+    customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
 	items: [{ type: Schema.Types.ObjectId, ref: 'OrderItem' }],
     storeLocation: { type: String, required: false },
     createdAt: { type: Date, required: true, default: Date.now }
 });
 
 var OrderItemSchema   = new Schema({
-	/*customer: { type: Schema.Types.ObjectId, ref: 'Customer' },*/
     itemNumber: { type: Number, required: true, unique: true },
     pricePaid: { type: Number, required: true, min: 0 },
     quantityBought: { type: Number, required: true, min: 0 },

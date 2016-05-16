@@ -8,7 +8,7 @@ config.aerohive = {};
 config.testdata = {};
 config.id = {};
 
-config.mongodb.uri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/AliveClothingz';
+config.mongodb.uri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/AliveClothing';
 config.mongodb.options = {
   server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
   replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }

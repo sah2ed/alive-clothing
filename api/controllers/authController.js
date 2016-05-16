@@ -2,6 +2,9 @@
 
 var util = require('util');
 var uuid = require('node-uuid');
+var passwordHash = require('password-hash');
+var User = require('../../models/user');
+var Helper = require('../helpers/helper');
 
 module.exports = {
   login: loginUser,
@@ -19,6 +22,28 @@ function loginUser(req, res) {
   var username = req.swagger.params.username.value;
   var password = req.swagger.params.password.value;
 
+  User.findOne({ username: username }, function(err, user) {
+  		if (err) {
+			Helper.handleError(err, res);
+
+  		} else {
+			var error = new Error("Username/password is incorrect.");
+  			if (user) {
+				if (passwordHash.verify(password, user.password)) {
+  					var message = "Login successful.";
+					var accessToken = uuid.v1();
+		  			res.json({message: message, accessToken: accessToken});
+				} else {
+					Helper.handleError(error, res, 401);
+				}
+
+			} else {
+				Helper.handleError(error, res, 401);
+			}
+		}
+	});
+
+/*
   var message = "Username/password is incorrect.";
   if (username && password) {
 	  if (username === 'user1' && password === 'test') {
@@ -28,8 +53,7 @@ function loginUser(req, res) {
 		  return;
 	  }
   }
-
-  res.status(401).json({message: message});
+  res.status(401).json({message: message});*/
 }
 
 function logoutUser(req, res) {

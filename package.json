@@ -13,12 +13,14 @@
     "lodash": "^4.12.0",
     "mongoose": "^4.4.17",
     "node-uuid": "^1.4.7",
+    "password-hash": "^1.2.2",
     "random-mac": "0.0.4",
     "swagger-express-mw": "^0.1.0"
   },
   "devDependencies": {
-    "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "mocha": "^2.4.5",
+    "should": "^7.1.1",
+    "supertest": "^1.2.0"
   },
   "scripts": {
     "start": "node app.js",

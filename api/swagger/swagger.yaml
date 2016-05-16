@@ -324,7 +324,60 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error"           
-          
+  
+  /store/surge:
+    x-swagger-router-controller: storeController
+    get:
+      tags:
+        - store
+      summary: The surge settings determine when alerts are shown in-app
+      description: Fetches store surge settings
+      operationId: getSurgeSettings
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        default:
+          description: Success
+          schema:
+            $ref: "#/definitions/Success"
+    post:
+      tags:
+        - store
+      description: Update the store surge settings
+      operationId: updateSurgeSettings
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: customerAlertThreshold
+          in: formData
+          description: 'The # of simultaenous in-store customers at which in-app alerts will appear'
+          required: true
+          type: integer
+        - name: customerAlertWindow
+          in: formData
+          description: 'The elapsed time (in minutes) before the customer threshold alert is triggered in-app'
+          required: true
+          type: integer
+        - name: customerAlertThresholdTotal
+          in: formData
+          description: 'The # of total in-store customers at which in-app alerts will appear'
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Success"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/Error"           
+                  
   #  serves up the swagger file
   /swagger:
     x-swagger-pipe: swagger_raw

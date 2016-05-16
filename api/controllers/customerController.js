@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var Helper = require('../helpers/helper');
 var Customer = require('../../models/customer');
 
 module.exports = {
@@ -30,15 +31,15 @@ function addCustomer(req, res) {
 	});
 
 	Customer.findOne({$or: [{email:email}, {phone:phone}]}, function(err, customer) {
-		if (err) handleError(err, res);
+		if (err) Helper.handleError(err, res);
 		else {
 			if (customer) {
 				var error = new Error("The contact info provided has been previously registered.");
-				handleError(error, res, 409);
+				Helper.handleError(error, res, 409);
 
 			} else {
 				newCustomer.save(function(error) {
-					if (error) handleError(error, res);
+					if (error) Helper.handleError(error, res);
 					else {
 						console.log('Customer saved successfully.');
 						res.json({message: newCustomer._id});
@@ -54,11 +55,11 @@ function getCustomerById(req, res) {
 	// id = id.replace(/"/g, '');
 	Customer.findById(id, function(err, customer) {
 			if (err) {
-				handleError(err, res);
+				Helper.handleError(err, res, 400);
 
 			} else {
 				if (customer) res.json(JSON.stringify(customer));
-				else handleError(err, res, 404);
+				else Helper.handleError(err, res, 404);
 			}
 	});
 }
@@ -66,18 +67,11 @@ function getCustomerById(req, res) {
 function getCustomers(req, res) {
     Customer.find({}, function(err, customers) {
 		if (err) {
-			handleError(err, res);
+			Helper.handleError(err, res);
 
 		} else {
 			// console.log("All customers: " + JSON.stringify(customers, null, 2));
 			res.json(JSON.stringify(customers));
 		}
 	});
-}
-
-function handleError(error, res, code) {
-	code = code || 500;
-	console.log(error);
-	var message = error.message || error.errmsg || error.toString() || "Error occurred.";
-	res.status(code).json({message: message});
 }

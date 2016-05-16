@@ -1,13 +1,13 @@
 'use strict';
 
 var util = require('util');
+var User = require('../../models/user');
 
 module.exports = {
   add: add,
   findByUsername: findByUsername
 };
 
-var User = require('../../models/user');
 
 function add(req, res) {
 	var username = req.swagger.params.username.value;
@@ -35,7 +35,7 @@ function add(req, res) {
 		} else {
 			if (user) {
 				console.log("Username exists: " + JSON.stringify(user));
-				res.status(400).json({message: "This username is not available."});
+				res.status(409).json({message: "This username is not available."});
 
 			} else {
 				newUser.save(function(err) {
@@ -44,7 +44,7 @@ function add(req, res) {
 						res.status(500).json({message: err});
 
 					} else {
-						console.log('User saved successfully!');
+						console.log('User saved successfully.');
 						res.json({message: newUser._id});
 					}
 				});

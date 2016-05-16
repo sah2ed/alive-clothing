@@ -105,8 +105,8 @@ function generateCustomers() {
 				email: "customer" + i + "@example.com",
 				phone: "+1(212)55555" + (50 + i),
 				country: "USA",
-				purchaseNote: "",
 				isVIP: (i%5==0) ? true : false,
+				purchaseNote: ""
 			})
 		);
 	}

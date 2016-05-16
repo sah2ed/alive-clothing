@@ -42,18 +42,6 @@ function loginUser(req, res) {
 			}
 		}
 	});
-
-/*
-  var message = "Username/password is incorrect.";
-  if (username && password) {
-	  if (username === 'user1' && password === 'test') {
-		  message = "Login successful.";
-		  var accessToken = uuid.v1();
-		  res.json({message: message, accessToken: accessToken});
-		  return;
-	  }
-  }
-  res.status(401).json({message: message});*/
 }
 
 function logoutUser(req, res) {

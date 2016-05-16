@@ -3,7 +3,7 @@
 var config = require('./config');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
-module.exports = app; // Needed for testing
+module.exports = app; // Added for testing
 
 var mongoose = require('mongoose');
 var mongoURI = config.mongodb.uri;

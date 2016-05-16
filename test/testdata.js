@@ -19,19 +19,18 @@ mongoose.connect(mongoURI, config.mongodb.options, function(err, result) {
 			addCustomers,
 			addOrders
 		], function (err, products, users, devices, customers, orders) {
-			mongoose.disconnect(function() {console.log("Done.");});
-			/*
-			async.waterfall([
-				Product.insertMany(products, async.apply(onInsertComplete, 'Product')),
-				User.insertMany(users, async.apply(onInsertComplete, 'User')),
-				Device.insertMany(devices, async.apply(onInsertComplete, 'Device')),
-				Customer.insertMany(customers, async.apply(onInsertComplete, 'Customer')),
-				OrderItem.insertMany(orderItems, async.apply(onInsertComplete, 'OrderItem')),
-				Order.insertMany(orders, async.apply(onInsertComplete, 'Order'))
+			var orderItems = orders.reduce(function(items, order) { return items.concat(order.toObject().orderItems); }, []);
+
+			async.series([
+				function(callback) { Product.insertMany(products, async.apply(onInsertComplete, 'Product', callback)) },
+				function(callback) { User.insertMany(users, async.apply(onInsertComplete, 'User', callback)) },
+				function(callback) { Device.insertMany(devices, async.apply(onInsertComplete, 'Device', callback)) },
+				function(callback) { Customer.insertMany(customers, async.apply(onInsertComplete, 'Customer', callback)) },
+				function(callback) { OrderItem.insertMany(orderItems, async.apply(onInsertComplete, 'OrderItem', callback)) },
+				function(callback) { Order.insertMany(orders, async.apply(onInsertComplete, 'Order', callback)) }
 			], function (err) {
 				mongoose.disconnect(function() {console.log("Done.");});
 			});
-			*/
 		});
     }
 });
@@ -152,7 +151,7 @@ function generateOrders(products, customers) {
 		this._orderItems = orderItems;
 	});
 	OrderSchema.virtual('orderItems').get(function() {
-  		return this._orderItems ;
+  		return this._orderItems;
 	});
 
 	var orderNumber = Number((new Date()).toISOString().replace(/[^0-9]/g, "").slice(0, 13));
@@ -226,11 +225,13 @@ function addOrders(products, users, devices, customers, callback) {
 	callback(null, products, users, devices, customers, orders);
 }
 
-function onInsertComplete(model, err, documents) {
+function onInsertComplete(model, callback, err, documents) {
 	if (err) {
-		console.log("Bulk insertion failed.");
+		console.log("Bulk insertion failed for " + model + " documents.");
 		console.error(err);
+		callback(err);
 	} else {
 		console.info('%d %s documents were inserted successfully. ', documents.length, model);
+		callback(null);
     }
 }

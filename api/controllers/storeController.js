@@ -7,7 +7,8 @@ var Store = require('../../models/store');
 module.exports = {
 	getSurgeSettings: getSurgeSettings,
 	updateSurgeSettings: updateSurgeSettings,
-	collectPresence: collectPresence
+	collectPresence: collectPresence,
+	publishPresence: publishPresence
 };
 
 function getSurgeSettings(req, res) {
@@ -45,5 +46,11 @@ function updateSurgeSettings(req, res) {
 
 function collectPresence(req, res) {
 	console.log("Receiving presence information.");
-	console.log(req);
+	console.log(req.headers);
+	console.log(req.body);
+}
+
+
+function publishPresence(req, res) {
+
 }

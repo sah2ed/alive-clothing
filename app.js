@@ -15,6 +15,9 @@ mongoose.connect(mongoURI, function (err, res) {
 	}
 });
 
+app.get('/', function(req, res){
+	res.sendFile(__dirname + '/index.html');
+});
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
 	if (err) { throw err; }

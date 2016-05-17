@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var passwordHash = require('password-hash');
 var User = require('../../models/user');
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
 
 function add(req, res) {
 	var username = req.swagger.params.username.value;
-  	var password = req.swagger.params.password.value;
+  	var password = passwordHash.generate(req.swagger.params.password.value);
   	var firstName = req.swagger.params.firstName.value;
   	var lastName = req.swagger.params.lastName.value;
   	var email = req.swagger.params.email.value;

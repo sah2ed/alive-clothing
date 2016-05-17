@@ -6,7 +6,8 @@ var Store = require('../../models/store');
 
 module.exports = {
 	getSurgeSettings: getSurgeSettings,
-	updateSurgeSettings: updateSurgeSettings
+	updateSurgeSettings: updateSurgeSettings,
+	collectPresence: collectPresence
 };
 
 function getSurgeSettings(req, res) {
@@ -40,4 +41,9 @@ function updateSurgeSettings(req, res) {
 		if (err) Helper.handleError(err, res);
 		else res.json({message: 'Store surge settings saved successfully.'});
 	});
+}
+
+function collectPresence(req, res) {
+	console.log("Receiving presence information.");
+	console.log(req);
 }

@@ -45,11 +45,10 @@ function loginUser(req, res) {
 }
 
 function logoutUser(req, res) {
-	var message = "Missing access token.";
-	console.log(JSON.stringify(req.query));
-	if (!req.query.accessToken) return res.status(401).json({message: message});
+	// var message = "Missing access token.";
+	// if (!req.query.accessToken) return res.status(401).json({message: message});
 
-	// res.json({message: "Logout successful."});
-	res.redirect('/');
+	console.log("Access token: " + req.session.accessToken);
+	res.json({message: "Logout successful."});
 }
 

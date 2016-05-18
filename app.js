@@ -3,6 +3,7 @@
 var config = require('./config');
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+
 module.exports = app; // Added for testing
 
 var mongoose = require('mongoose');
@@ -15,9 +16,6 @@ mongoose.connect(mongoURI, function (err, res) {
 	}
 });
 
-app.get('/', function(req, res){
-	res.sendFile(__dirname + '/index.html');
-});
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
 	if (err) { throw err; }

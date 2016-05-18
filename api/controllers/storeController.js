@@ -48,6 +48,7 @@ function collectPresence(req, res) {
 	console.log("Receiving presence information.");
 	console.log(req.headers);
 	console.log(req.swagger.params);
+	res.json({message: 'OK'});
 }
 
 

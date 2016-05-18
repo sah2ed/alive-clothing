@@ -47,7 +47,7 @@ function updateSurgeSettings(req, res) {
 function collectPresence(req, res) {
 	console.log("Receiving presence information.");
 	console.log(req.headers);
-	console.log(JSON.stringify(req.swagger));
+	console.log(JSON.stringify(req));
 	res.json({message: 'OK'});
 }
 

@@ -384,7 +384,12 @@ paths:
         - application/json
       produces:
         - application/json
-      parameters: []
+      parameters: 
+        - name: body
+          in: formData
+          description: 'The request body'
+          required: false
+          type: string
       responses:
         default:
           description: Success

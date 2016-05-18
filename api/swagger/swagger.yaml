@@ -464,33 +464,4 @@ definitions:
       purchaseNote:
         type: string
         
-  Device:
-    required:
-      - owner
-      - deviceName
-      - deviceType
-      - macAddress
-    properties:
-      _id:
-        type: string
-      owner:
-        $ref: "#/definitions/DeviceOwner"
-      deviceName:
-        type: string
-      deviceType:
-        type: string      
-      macAddress:
-        type: string
-  
-  DeviceOwner:
-    required:
-      - firstName
-      - lastName
-    properties:
-      _id:
-        type: string
-      firstName:
-        type: string 
-      lastName:
-        type: string    
       

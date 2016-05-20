@@ -3,7 +3,7 @@ info:
   version: "1.0.0"
   title: Aerohive - Alive Clothing API
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost:3000
 # basePath prefixes all resource paths 
 basePath: /api
 tags:
@@ -18,7 +18,7 @@ tags:
 # 
 schemes:
   # tip: remove http to make production-grade
-  - http
+  #- http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:

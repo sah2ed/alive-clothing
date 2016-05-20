@@ -3,12 +3,15 @@
 var util = require('util');
 var Helper = require('../helpers/helper');
 var Store = require('../../models/store');
+var config = require('../../config');
+
+//var io = require('../../app');
+var io = require('socket.io')();
 
 module.exports = {
 	getSurgeSettings: getSurgeSettings,
 	updateSurgeSettings: updateSurgeSettings,
-	collectPresence: collectPresence,
-	publishPresence: publishPresence
+	collectPresence: collectPresence
 };
 
 function getSurgeSettings(req, res) {
@@ -45,13 +48,27 @@ function updateSurgeSettings(req, res) {
 }
 
 function collectPresence(req, res) {
-	console.log("Receiving presence information.");
-	console.log(req.headers);
-	console.dir(req.body);
-	res.json({message: 'OK'});
-}
+	console.log("Receiving presence information from HiveManager.");
 
+	var token = req.get('Authorization');
+	if (token) {
+		token = token.slice(6, token.length);
+		console.log('Request access token is valid: ' + token);
+		if (config.aerohive.accessToken == token) {
+			var data = JSON.stringify(req.body, null, 2);
 
-function publishPresence(req, res) {
+			console.log(req.headers);
+			res.json({message: 'OK'});
+
+			console.log("Notifying websocket client with presence data.");
+			console.log(data);
+			config.web.io.sockets.emit('message', data);
+
+		} else {
+			Helper.handleError('The access token is invalid.', res, 403);
+		}
+	} else {
+		Helper.handleError('The access token is required.', res, 400);
+	}
 
 }

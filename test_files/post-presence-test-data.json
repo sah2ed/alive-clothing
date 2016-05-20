@@ -1,0 +1,57 @@
+
+
+{
+  "ownerId": "1082983976",
+  "apMac": "3a1e6d8c785c",
+  "observations": [
+    {
+      "clientMac": "dcac3da506b4",
+      "ipv4": "191.45.252.67",
+      "ipv6": null,
+      "seenTime": "2015-10-09T07:00:00.000+0000",
+      "seenEpoch": 1264988544,
+      "ssid": "Retail World",
+      "rssi": -50,
+      "manufacturer": "Apple",
+      "os": "ios",
+      "lat": 45,
+      "lng": 122,
+      "unc": 5,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "clientMac": "dcac3da506b4",
+      "ipv4": "191.45.252.67",
+      "ipv6": null,
+      "seenTime": "2015-10-09T07:00:00.000+0000",
+      "seenEpoch": 1264988544,
+      "ssid": "Retail World",
+      "rssi": -50,
+      "manufacturer": "Apple",
+      "os": "ios",
+      "lat": 45,
+      "lng": 122,
+      "unc": 5,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "clientMac": "dcac3da506b4",
+      "ipv4": "191.45.252.67",
+      "ipv6": null,
+      "seenTime": "2015-10-09T07:00:00.000+0000",
+      "seenEpoch": 1264988544,
+      "ssid": "Retail World",
+      "rssi": -50,
+      "manufacturer": "Apple",
+      "os": "ios",
+      "lat": 45,
+      "lng": 122,
+      "unc": 5,
+      "x": 0,
+      "y": 0
+    }
+  ]
+}
+

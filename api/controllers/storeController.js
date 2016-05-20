@@ -49,15 +49,15 @@ function updateSurgeSettings(req, res) {
 
 function collectPresence(req, res) {
 	console.log("Receiving presence information from HiveManager.");
+	console.log(req.headers);
 
 	var token = req.get('Authorization');
 	if (token) {
 		token = token.slice(6, token.length);
-		console.log('Request access token is valid: ' + token);
+		console.log('Request access token present: ' + token);
 		if (config.aerohive.accessToken == token) {
 			var data = JSON.stringify(req.body, null, 2);
 
-			console.log(req.headers);
 			res.json({message: 'OK'});
 
 			console.log("Notifying websocket client with presence data.");

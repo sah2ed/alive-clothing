@@ -21,6 +21,8 @@ config.web.options = {
 };
 
 config.aerohive.accessToken = 'VpVw29xZVGWqVhNHgEcpYUitt05HSsixd7f09801';
+// Workaround for HiveManager as it only supports 32 char tokens
+config.aerohive.accessToken = 'VpVw29xZVGWqVhNHgEcpYUitt05HSsix';
 
 
 config.testdata.users = 5;

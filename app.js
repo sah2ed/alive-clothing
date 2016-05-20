@@ -43,6 +43,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 	var io = require('socket.io').listen(server);
 
 	config.web.io = io;
+	io.on('connection', function(socket){
+		io.emit('eventStart', 'Connected to the web socket on port: ' + port);
+    });
 
-	console.log('Started the API on port: ' + port);
+	console.log('Started the REST API on port: ' + port);
 });

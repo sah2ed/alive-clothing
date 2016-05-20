@@ -62,7 +62,7 @@ function collectPresence(req, res) {
 
 			console.log("Notifying websocket client with presence data.");
 			console.log(data);
-			config.web.io.sockets.emit('message', data);
+			config.web.io.sockets.emit('eventVip', data);
 
 		} else {
 			Helper.handleError('The access token is invalid.', res, 403);

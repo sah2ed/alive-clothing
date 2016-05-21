@@ -11,11 +11,11 @@ module.exports = {
 };
 
 function addDevice(req, res) {
-    var firstName = req.swagger.params.ownerFirstName.value;
-    var lastName = req.swagger.params.ownerLastName.value;
-	var deviceName = req.swagger.params.deviceName.value;
-    var deviceType = req.swagger.params.deviceType.value;
-    var macAddress = req.swagger.params.macAddress.value;
+    var firstName = req.body.ownerFirstName;
+    var lastName = req.body.ownerLastName;
+	var deviceName = req.body.deviceName;
+    var deviceType = req.body.deviceType;
+    var macAddress = req.body.macAddress;
 
     var message = util.format('Device (%s, %s, %s, %s, %s)', firstName, lastName, deviceName, deviceType, macAddress);
     console.log(message);

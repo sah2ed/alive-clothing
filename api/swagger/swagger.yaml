@@ -20,6 +20,13 @@ schemes:
   # tip: remove http to make production-grade
   #- http
   - https
+securityDefinitions:   
+  api_key:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+        - api_key: []    
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
@@ -33,7 +40,10 @@ paths:
       tags:
         - user
       summary: User (store staff) authentication
-      description: Logs a user into the app
+      description: |
+        Logs a user into the app.
+        This route requires a user to authenticate after which a token will be 
+        issued and thus is not protected.
       operationId: login
       consumes:
         - application/json
@@ -45,11 +55,13 @@ paths:
           description: The login user name
           required: true
           type: string
+          default: user1
         - name: password
           in: formData
           description: The login password
           required: true
           type: string
+          default: user1
       responses:
         "200":
           description: Success
@@ -59,6 +71,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/Error" 
+      security: []
   /auth/logout:
     x-swagger-router-controller: authController
     get:
@@ -84,37 +97,17 @@ paths:
         - user
       summary: User (store staff) sign up
       description: Adds a new user into the app
-      operationId: add
+      operationId: addUser
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - name: username
-          in: formData
-          description: The login user name
+        - name: user
           required: true
-          type: string
-        - name: password
-          in: formData
-          description: The login password
-          required: true
-          type: string
-        - name: firstName
-          in: formData
-          description: The first name
-          required: true
-          type: string
-        - name: lastName
-          in: formData
-          description: The last name
-          required: true
-          type: string
-        - name: email
-          in: formData
-          description: The email address
-          required: true
-          type: string
+          in: body
+          schema:
+            $ref: "#/definitions/User"
       responses:
         "200":
           description: Success
@@ -142,6 +135,7 @@ paths:
           description: "The name that needs to be fetched. Use user1 for testing. "
           required: true
           type: string
+          default: user1
       responses:
         "200":
           description: Success
@@ -184,36 +178,11 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: firstName
-          in: formData
-          description: The first name
+        - name: customer
           required: true
-          type: string
-        - name: lastName
-          in: formData
-          description: The last name
-          required: true
-          type: string
-        - name: email
-          in: formData
-          description: The email address
-          required: true
-          type: string
-        - name: phone
-          in: formData
-          description: The phone number
-          required: true
-          type: string
-        - name: country
-          in: formData
-          description: The customer's country
-          required: true
-          type: string
-        - name: isVIP
-          in: formData
-          description: The customer status
-          required: true
-          type: boolean
+          in: body
+          schema:
+            $ref: "#/definitions/Customer"
       responses:
         "200":
           description: Success
@@ -285,31 +254,11 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: ownerFirstName
-          in: formData
-          description: The owner's first name
+        - name: device
           required: true
-          type: string
-        - name: ownerLastName
-          in: formData
-          description: The owner's last name
-          required: true
-          type: string
-        - name: deviceName
-          in: formData
-          description: The device name on the network
-          required: true
-          type: string
-        - name: deviceType
-          in: formData
-          description: The device type
-          required: true
-          type: string
-        - name: macAddress
-          in: formData
-          description: The device's hardware address
-          required: true
-          type: string
+          in: body
+          schema:
+            $ref: "#/definitions/Device"
       responses:
         "200":
           description: Success
@@ -378,7 +327,9 @@ paths:
       tags:
         - store
       summary: The webhook endpoint for presence notices shown in-app
-      description: Collects presence info sent by Aerohive HiveManager
+      description: |
+        Collects presence info sent by Aerohive HiveManager.
+        This route does not require authentication and thus is not protected.
       operationId: collectPresence
       consumes:
         - application/json
@@ -395,6 +346,7 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Success"          
+      security: []
                   
   #  serves up the swagger file
   /swagger:
@@ -426,18 +378,22 @@ definitions:
     properties:
       username:
         type: string
+        description: The staff's login user name
       password:
         type: string
-        description: The hashed password
+        description: The password. Will be hashed by the server.
       firstName:
         type: string 
+        description: The staff's first name
       lastName:
         type: string
+        description: The staff's last name
       email:
         type: string
+        description: The staff's email address
       phone:
         type: string
-        
+        description: The staff's phone number address. Optional
   Customer:
     required:
       - firstName
@@ -451,17 +407,59 @@ definitions:
         type: string
       firstName:
         type: string 
+        description: The customer's first name
       lastName:
         type: string
+        description: The customer's last name
       email:
         type: string
+        description: The customer's email address
       phone:
         type: string      
+        description: The customer's phone number
       country:
         type: string
+        description: The customer's country
       isVIP:
         type: boolean
+        description: The customer's loyalty status
       purchaseNote:
         type: string
+        description: Personalized note on order pick up preferences. Optional
+  
+  Device:
+    required:
+      - owner
+      - deviceName
+      - deviceType
+      - macAddress
+    properties:
+      _id:
+        type: string
+      owner:
+        $ref: "#/definitions/DeviceOwner"
+      deviceName:
+        type: string
+        description: The owner assigned name of the device
+      deviceType:
+        type: string      
+        description: The device type
+      macAddress:
+        type: string
+        description: The manufacturer assigned hardware address
+  DeviceOwner:
+    required:
+      - firstName
+      - lastName
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string 
+        description: The device owner's first name
+      lastName:
+        type: string    
+        description: The device owner's last name
+
         
       

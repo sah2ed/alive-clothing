@@ -11,12 +11,12 @@ module.exports = {
 };
 
 function addCustomer(req, res) {
-    var firstName = req.swagger.params.firstName.value;
-    var lastName = req.swagger.params.lastName.value;
-    var email = req.swagger.params.email.value;
-	var phone = req.swagger.params.phone.value;
-    var country = req.swagger.params.country.value;
-    var isVIP = req.swagger.params.isVIP.value;
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var email = req.body.email;
+	var phone = req.body.phone;
+    var country = req.body.country;
+    var isVIP = req.body.isVIP;
 
     var message = util.format('Customer (%s, %s, %s, %s, %s, %s)', firstName, lastName, email, phone, country, isVIP);
     console.log(message);
@@ -52,7 +52,6 @@ function addCustomer(req, res) {
 
 function getCustomerById(req, res) {
 	var id = req.swagger.params.id.value;
-	// id = id.replace(/"/g, '');
 	Customer.findById(id, function(err, customer) {
 			if (err) {
 				Helper.handleError(err, res, 400);
@@ -70,7 +69,6 @@ function getCustomers(req, res) {
 			Helper.handleError(err, res);
 
 		} else {
-			// console.log("All customers: " + JSON.stringify(customers, null, 2));
 			res.json(JSON.stringify(customers));
 		}
 	});

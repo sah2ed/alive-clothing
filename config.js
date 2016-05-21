@@ -19,6 +19,9 @@ config.web.options = {
   key: 'test_files/cert/server.key',
   cert: 'test_files/cert/server.crt'
 };
+config.web.jwt = {};
+config.web.jwt.secret = 'aliv3Cl0th1ng';
+config.web.jwt.options = {expiresIn: '7d'};
 
 config.aerohive.accessToken = 'VpVw29xZVGWqVhNHgEcpYUitt05HSsixd7f09801';
 // Workaround for HiveManager as it only supports 32 char tokens

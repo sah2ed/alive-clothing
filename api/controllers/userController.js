@@ -5,17 +5,17 @@ var passwordHash = require('password-hash');
 var User = require('../../models/user');
 
 module.exports = {
-  add: add,
+  addUser: addUser,
   findByUsername: findByUsername
 };
 
 
-function add(req, res) {
-	var username = req.swagger.params.username.value;
-  	var password = passwordHash.generate(req.swagger.params.password.value);
-  	var firstName = req.swagger.params.firstName.value;
-  	var lastName = req.swagger.params.lastName.value;
-  	var email = req.swagger.params.email.value;
+function addUser(req, res) {
+	var username = req.body.username;
+  	var password = passwordHash.generate(req.body.password);
+  	var firstName = req.body.firstName;
+  	var lastName = req.body.lastName;
+  	var email = req.body.email;
 
   	var message = util.format('User (%s, %s, %s, %s, %s)', username, password, firstName, lastName, email);
 	console.log(message);

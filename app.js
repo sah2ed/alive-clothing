@@ -5,6 +5,7 @@ var https = require('https');
 var fs = require('fs');
 var app = require('express')();
 var SwaggerExpress = require('swagger-express-mw');
+var jwt = require('jsonwebtoken');
 
 //module.exports = app; // Added for testing
 
@@ -30,6 +31,21 @@ app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
 
+config.swaggerSecurityHandlers = {
+    api_key: function (req, authOrSecDef, scopesOrApiKey, callback) {
+		// console.log("Authorization: " + scopesOrApiKey);
+		try {
+			var user = jwt.verify(scopesOrApiKey, config.web.jwt.secret);
+			req.user = user;
+			console.log("Request made by: " + JSON.stringify(req.user));
+			callback(null);
+
+		} catch(err) {
+			callback(err);
+		}
+    }
+};
+
 
 SwaggerExpress.create(config, function(err, swaggerExpress) {
 	if (err) { throw err; }
@@ -38,8 +54,8 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 	swaggerExpress.register(app);
 
 	var port = config.web.port;
-	// var server = https.createServer(options, app).listen(port);
-	var server = app.listen(port); // uncomment to enable HTTP
+	var server = https.createServer(options, app).listen(port);
+	// var server = app.listen(port); // uncomment to enable HTTP
 	var io = require('socket.io').listen(server);
 
 	config.web.io = io;

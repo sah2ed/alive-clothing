@@ -1,10 +1,13 @@
 'use strict';
 
 var util = require('util');
-var uuid = require('node-uuid');
 var passwordHash = require('password-hash');
+
 var User = require('../../models/user');
 var Helper = require('../helpers/helper');
+
+var config = require('../../config');
+var jwt = require('jsonwebtoken');
 
 module.exports = {
   login: loginUser,
@@ -30,9 +33,9 @@ function loginUser(req, res) {
 			var error = new Error("Username/password is incorrect.");
   			if (user) {
 				if (passwordHash.verify(password, user.password)) {
-  					var message = "Login successful.";
-					var accessToken = uuid.v1();
-		  			res.json({message: message, accessToken: accessToken});
+					var token = jwt.sign({username:user.username}, config.web.jwt.secret, config.web.jwt.options);
+					console.log("Login JWT: " + token);
+		  			res.json({message: 'Login successful.', jwt: token});
 				} else {
 					Helper.handleError(error, res, 401);
 				}
@@ -45,10 +48,8 @@ function loginUser(req, res) {
 }
 
 function logoutUser(req, res) {
-	// var message = "Missing access token.";
-	// if (!req.query.accessToken) return res.status(401).json({message: message});
-
-	console.log("Access token: " + req.session.accessToken);
-	res.json({message: "Logout successful."});
+	var token = jwt.sign({username:req.user.username}, config.web.jwt.secret, {expiresIn: 0});
+	console.log("Logout JWT: " + token);
+	res.json({message: 'Logout successful.', jwt: token});
 }
 

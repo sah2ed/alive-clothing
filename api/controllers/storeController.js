@@ -5,8 +5,6 @@ var Helper = require('../helpers/helper');
 var Store = require('../../models/store');
 var config = require('../../config');
 
-//var io = require('../../app');
-var io = require('socket.io')();
 
 module.exports = {
 	getSurgeSettings: getSurgeSettings,

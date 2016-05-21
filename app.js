@@ -54,8 +54,8 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 	swaggerExpress.register(app);
 
 	var port = config.web.port;
-	var server = https.createServer(options, app).listen(port);
-	// var server = app.listen(port); // uncomment to enable HTTP
+	//var server = https.createServer(options, app).listen(port);
+	 var server = app.listen(port); // uncomment to enable HTTP
 	var io = require('socket.io').listen(server);
 
 	config.web.io = io;

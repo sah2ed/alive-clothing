@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var passwordHash = require('password-hash');
+var bcrypt = require('bcryptjs');
 
 var User = require('../../models/user');
 var Helper = require('../helpers/helper');
@@ -32,7 +32,7 @@ function loginUser(req, res) {
   		} else {
 			var error = new Error("Username/password is incorrect.");
   			if (user) {
-				if (passwordHash.verify(password, user.password)) {
+				if (bcrypt.compareSync(password, user.password)) {
 					var token = jwt.sign({username:user.username}, config.web.jwt.secret, config.web.jwt.options);
 					console.log("Login JWT: " + token);
 		  			res.json({message: 'Login successful.', jwt: token});

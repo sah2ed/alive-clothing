@@ -4,7 +4,7 @@ var config = require('../config');
 var async = require('async');
 var _ = require('lodash');
 var randomMac = require('random-mac');
-var passwordHash = require('password-hash');
+var bcrypt = require('bcryptjs');
 var mongoose = require('mongoose');
 var mongoURI = config.mongodb.uri;
 
@@ -68,7 +68,7 @@ function generateUsers() {
 		users.push(
 			new User({
 				username: "user" + i,
-				password: passwordHash.generate("user" + i),
+				password: bcrypt.hashSync("user" + i, bcrypt.genSaltSync(10)),
 				firstName: "Test",
 				lastName: "User" + i,
 				email: "user" + i + "@example.com"

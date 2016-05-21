@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var passwordHash = require('password-hash');
+var bcrypt = require('bcryptjs');
 var User = require('../../models/user');
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
 
 function addUser(req, res) {
 	var username = req.body.username;
-  	var password = passwordHash.generate(req.body.password);
+  	var password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
   	var firstName = req.body.firstName;
   	var lastName = req.body.lastName;
   	var email = req.body.email;

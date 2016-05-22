@@ -51,16 +51,16 @@ function collectPresence(req, res) {
 
 	var token = req.get('Authorization');
 	if (token) {
-		token = token.slice(6, token.length);
+		token = token.slice('Bearer '.length, token.length).trim();
 		console.log('Request access token present: ' + token);
-		if (config.aerohive.accessToken == token) {
+		if (config.aerohive.accessToken === token) {
 			var data = JSON.stringify(req.body, null, 2);
 
 			res.json({message: 'OK'});
 
 			console.log("Notifying websocket client with presence data.");
 			console.log(data);
-			config.web.io.sockets.emit('eventVip', data);
+			config.web.io.sockets.emit('eventVIP', data);
 
 		} else {
 			Helper.handleError('The access token is invalid.', res, 403);

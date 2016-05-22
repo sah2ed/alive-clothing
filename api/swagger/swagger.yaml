@@ -18,7 +18,7 @@ tags:
 # 
 schemes:
   # tip: remove http to make production-grade
-  #- http
+  - http
   - https
 securityDefinitions:   
   api_key:
@@ -43,7 +43,7 @@ paths:
       description: |
         Logs a user into the app.
         This route requires a user to authenticate after which a token will be 
-        issued and thus is not protected.
+        issued and thus is not protected. You can login with user1/user1.
       operationId: login
       consumes:
         - application/json
@@ -55,13 +55,11 @@ paths:
           description: The login user name
           required: true
           type: string
-          default: user1
         - name: password
           in: formData
           description: The login password
           required: true
           type: string
-          default: user1
       responses:
         "200":
           description: Success

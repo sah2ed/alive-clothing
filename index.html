@@ -35,7 +35,7 @@
         $('#start').append($('<li>').text(msg + ' at: ' + new Date().toString()));
       });
       socket.on('eventVip', function(msg){
-	    $('#messages').append($('<li class="eventVip">').text(msg));
+	    $('#messages').append($('<li class="eventVIP">').text(msg));
       });
       socket.on('eventSurge', function(msg){
 	  	    $('#messages').append($('<li class="eventSurge">').text(msg));

@@ -24,6 +24,7 @@ function loginUser(req, res) {
   // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
   var username = req.swagger.params.username.value;
   var password = req.swagger.params.password.value;
+  // console.dir(req.swagger.params);
 
   User.findOne({ username: username }, function(err, user) {
   		if (err) {
@@ -31,6 +32,7 @@ function loginUser(req, res) {
 
   		} else {
 			var error = new Error("Username/password is incorrect.");
+			// console.log("Username, Password: %s, %s", username, password);
   			if (user) {
 				if (bcrypt.compareSync(password, user.password)) {
 					var token = jwt.sign({username:user.username}, config.web.jwt.secret, config.web.jwt.options);
